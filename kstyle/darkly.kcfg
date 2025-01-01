@@ -121,7 +121,7 @@
     </entry>
 
     <entry name="ScrollableMenu" type="Bool">
-      <default>false</default>
+      <default>true</default>
     </entry>
     
     <entry name="OldTabbar" type="Bool">
@@ -188,7 +188,7 @@
     </entry>
 
     <entry name="RoundedRubberBandFrame" type="Bool">
-      <default>false</default>
+      <default>true</default>
     </entry>
 
     <!-- window dragging -->
