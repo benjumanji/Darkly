@@ -71,6 +71,7 @@ StyleConfig::StyleConfig(QWidget *parent)
     connect(_sidebarOpacity, SIGNAL(valueChanged(int)), _sidebarOpacitySpinBox, SLOT(setValue(int)));
     connect(_sidebarOpacitySpinBox, SIGNAL(valueChanged(int)), _sidebarOpacity, SLOT(setValue(int)));
 
+    connect(_tabBarDrawCenteredTabs, &QAbstractButton::toggled, this, &StyleConfig::updateChanged);
     connect(_menuBarOpacity, &QAbstractSlider::valueChanged, this, &StyleConfig::updateChanged);
     connect(_menuBarOpacity, SIGNAL(valueChanged(int)), _menuBarOpacitySpinBox, SLOT(setValue(int)));
     connect(_menuBarOpacitySpinBox, SIGNAL(valueChanged(int)), _menuBarOpacity, SLOT(setValue(int)));
@@ -105,6 +106,7 @@ void StyleConfig::save()
     StyleConfigData::setScrollBarAddLineButtons(_scrollBarAddLineButtons->currentIndex());
     StyleConfigData::setScrollBarSubLineButtons(_scrollBarSubLineButtons->currentIndex());
     StyleConfigData::setAnimationsEnabled(_animationsEnabled->isChecked());
+    StyleConfigData::setTabBarDrawCenteredTabs(_tabBarDrawCenteredTabs->isChecked());
     StyleConfigData::setAnimationsDuration(_animationsDuration->value());
     StyleConfigData::setWindowDragMode(_windowDragMode->currentIndex());
     StyleConfigData::setMenuOpacity(_menuOpacity->value());
@@ -197,6 +199,8 @@ void StyleConfig::updateChanged()
         _menuBarOpacitySpinBox->setValue(_menuBarOpacity->value());
     } else if (_kTextEditDrawFrame->isChecked() != StyleConfigData::kTextEditDrawFrame())
         modified = true;
+    else if (_tabBarDrawCenteredTabs->isChecked() != StyleConfigData::tabBarDrawCenteredTabs())
+        modified = true;
     else if (_widgetDrawShadow->isChecked() != StyleConfigData::widgetDrawShadow())
         modified = true;
     else if (_scrollableMenu->isChecked() != StyleConfigData::scrollableMenu())
@@ -242,7 +246,7 @@ void StyleConfig::load()
     _menuOpacitySpinBox->setValue(StyleConfigData::menuOpacity());
     _sidebarOpacity->setValue(StyleConfigData::dolphinSidebarOpacity());
     _sidebarOpacitySpinBox->setValue(StyleConfigData::dolphinSidebarOpacity());
-
+    _tabBarDrawCenteredTabs->setChecked(StyleConfigData::tabBarDrawCenteredTabs());
     _menuBarOpacity->setValue(StyleConfigData::menuBarOpacity());
     _menuBarOpacitySpinBox->setValue(StyleConfigData::menuBarOpacity());
 
