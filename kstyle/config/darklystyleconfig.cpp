@@ -26,6 +26,7 @@
 #include "darklystyleversion.h"
 #include <QDBusConnection>
 #include <QDBusMessage>
+#include <KLocalizedString>
 
 extern "C" {
 Q_DECL_EXPORT QWidget *allocate_kstyle_config(QWidget *parent)
@@ -70,6 +71,7 @@ StyleConfig::StyleConfig(QWidget *parent)
     connect(_sidebarOpacity, SIGNAL(valueChanged(int)), _sidebarOpacitySpinBox, SLOT(setValue(int)));
     connect(_sidebarOpacitySpinBox, SIGNAL(valueChanged(int)), _sidebarOpacity, SLOT(setValue(int)));
 
+    connect(_tabBarDrawCenteredTabs, &QAbstractButton::toggled, this, &StyleConfig::updateChanged);
     connect(_menuBarOpacity, &QAbstractSlider::valueChanged, this, &StyleConfig::updateChanged);
     connect(_menuBarOpacity, SIGNAL(valueChanged(int)), _menuBarOpacitySpinBox, SLOT(setValue(int)));
     connect(_menuBarOpacitySpinBox, SIGNAL(valueChanged(int)), _menuBarOpacity, SLOT(setValue(int)));
@@ -78,9 +80,13 @@ StyleConfig::StyleConfig(QWidget *parent)
     connect(_widgetDrawShadow, &QAbstractButton::toggled, this, &StyleConfig::updateChanged);
     connect(_scrollableMenu, &QAbstractButton::toggled, this, &StyleConfig::updateChanged);
     connect(_oldTabbar, &QAbstractButton::toggled, this, &StyleConfig::updateChanged);
+    connect(_adjustToDarkThemes, &QAbstractButton::toggled, this, &StyleConfig::updateChanged);
+    connect(_tabBGColor, &KColorButton::changed, this, &StyleConfig::updateChanged);
+
     connect(_tabBarAltStyle, &QAbstractButton::toggled, this, &StyleConfig::updateChanged);
     connect(_transparentDolphinView, &QAbstractButton::toggled, this, &StyleConfig::updateChanged);
     connect(_cornerRadius, SIGNAL(valueChanged(int)), SLOT(updateChanged()));
+    connect(_tabUseHighlightColor, &QAbstractButton::toggled, this, &StyleConfig::updateChanged);
 }
 
 //__________________________________________________________________
@@ -100,6 +106,7 @@ void StyleConfig::save()
     StyleConfigData::setScrollBarAddLineButtons(_scrollBarAddLineButtons->currentIndex());
     StyleConfigData::setScrollBarSubLineButtons(_scrollBarSubLineButtons->currentIndex());
     StyleConfigData::setAnimationsEnabled(_animationsEnabled->isChecked());
+    StyleConfigData::setTabBarDrawCenteredTabs(_tabBarDrawCenteredTabs->isChecked());
     StyleConfigData::setAnimationsDuration(_animationsDuration->value());
     StyleConfigData::setWindowDragMode(_windowDragMode->currentIndex());
     StyleConfigData::setMenuOpacity(_menuOpacity->value());
@@ -110,9 +117,12 @@ void StyleConfig::save()
     StyleConfigData::setWidgetDrawShadow(_widgetDrawShadow->isChecked());
     StyleConfigData::setScrollableMenu(_scrollableMenu->isChecked());
     StyleConfigData::setOldTabbar(_oldTabbar->isChecked());
+    StyleConfigData::setAdjustToDarkThemes(_adjustToDarkThemes->isChecked());
+    StyleConfigData::setTabBGColor(_tabBGColor->color());
     StyleConfigData::setTabBarAltStyle(_tabBarAltStyle->isChecked());
     StyleConfigData::setTransparentDolphinView(_transparentDolphinView->isChecked());
     StyleConfigData::setCornerRadius(_cornerRadius->value());
+    StyleConfigData::setTabUseHighlightColor(_tabUseHighlightColor->isChecked());
 
     StyleConfigData::self()->save();
 
@@ -189,17 +199,25 @@ void StyleConfig::updateChanged()
         _menuBarOpacitySpinBox->setValue(_menuBarOpacity->value());
     } else if (_kTextEditDrawFrame->isChecked() != StyleConfigData::kTextEditDrawFrame())
         modified = true;
+    else if (_tabBarDrawCenteredTabs->isChecked() != StyleConfigData::tabBarDrawCenteredTabs())
+        modified = true;
     else if (_widgetDrawShadow->isChecked() != StyleConfigData::widgetDrawShadow())
         modified = true;
     else if (_scrollableMenu->isChecked() != StyleConfigData::scrollableMenu())
         modified = true;
     else if (_oldTabbar->isChecked() != StyleConfigData::oldTabbar())
         modified = true;
+    else if (_adjustToDarkThemes->isChecked() != StyleConfigData::adjustToDarkThemes())
+        modified = true;
     else if (_tabBarAltStyle->isChecked() != StyleConfigData::tabBarAltStyle())
         modified = true;
     else if (_transparentDolphinView->isChecked() != StyleConfigData::transparentDolphinView())
         modified = true;
     else if (_cornerRadius->value() != StyleConfigData::cornerRadius())
+        modified = true;
+    else if (_tabBGColor->color() != StyleConfigData::tabBGColor())
+        modified = true;
+    else if (_tabUseHighlightColor->isChecked() != StyleConfigData::tabUseHighlightColor())
         modified = true;
 
     emit changed(modified);
@@ -228,7 +246,7 @@ void StyleConfig::load()
     _menuOpacitySpinBox->setValue(StyleConfigData::menuOpacity());
     _sidebarOpacity->setValue(StyleConfigData::dolphinSidebarOpacity());
     _sidebarOpacitySpinBox->setValue(StyleConfigData::dolphinSidebarOpacity());
-
+    _tabBarDrawCenteredTabs->setChecked(StyleConfigData::tabBarDrawCenteredTabs());
     _menuBarOpacity->setValue(StyleConfigData::menuBarOpacity());
     _menuBarOpacitySpinBox->setValue(StyleConfigData::menuBarOpacity());
 
@@ -237,9 +255,12 @@ void StyleConfig::load()
     _widgetDrawShadow->setChecked(StyleConfigData::widgetDrawShadow());
     _scrollableMenu->setChecked(StyleConfigData::scrollableMenu());
     _oldTabbar->setChecked(StyleConfigData::oldTabbar());
+    _adjustToDarkThemes->setChecked(StyleConfigData::adjustToDarkThemes());
     _tabBarAltStyle->setChecked(StyleConfigData::tabBarAltStyle());
+    _tabBGColor->setColor(StyleConfigData::tabBGColor());
     _transparentDolphinView->setChecked(StyleConfigData::transparentDolphinView());
     _cornerRadius->setValue(StyleConfigData::cornerRadius());
+    _tabUseHighlightColor->setChecked(StyleConfigData::tabUseHighlightColor());
     _versionNumber->setText(DARKLY_VERSION_STRING);
 }
 

@@ -344,8 +344,16 @@ void Style::polish(QWidget *widget)
             }
 
             // make window translucent
-            widget->setAttribute(Qt::WA_TranslucentBackground);
-            widget->setAttribute(Qt::WA_StyledBackground);
+            if (!widget->testAttribute(Qt::WA_TranslucentBackground))
+                widget->setAttribute(Qt::WA_TranslucentBackground);
+
+            if (!widget->testAttribute(Qt::WA_StyledBackground))
+                widget->setAttribute(Qt::WA_StyledBackground);
+
+            // setting Qt::WA_TranslucentBackground enables Qt::WA_NoSystemBackground unset here to stop flickering during repaint events on resizing
+            if (StyleConfigData::transparentDolphinView() && widget->testAttribute(Qt::WA_NoSystemBackground))
+                widget->setAttribute(Qt::WA_NoSystemBackground, false);
+
             _translucentWidgets.insert(widget);
 
             // paint the background in event filter
@@ -361,7 +369,7 @@ void Style::polish(QWidget *widget)
     }
 
     // hack Dolphin's view
-    if (_isDolphin && StyleConfigData::transparentDolphinView() && qobject_cast<QAbstractScrollArea *>(getParent(widget, 2))
+    if (_isDolphin && qobject_cast<QAbstractScrollArea *>(getParent(widget, 2))
         && !qobject_cast<QAbstractScrollArea *>(getParent(widget, 3))) {
         if (widget->autoFillBackground())
             widget->setAutoFillBackground(false);
@@ -1548,7 +1556,8 @@ bool Style::eventFilter(QObject *object, QEvent *event)
 
         // update blur region if window is not completely transparent
         if (widget && widget->inherits("QWidget")) {
-            if (widget->palette().color(QPalette::Window).alpha() == 255) {
+            // also catch if the alpha channel is set to 255
+            if (widget->palette().color(QPalette::Window).alpha() <= 255) {
                 if ((qobject_cast<QToolBar *>(widget) || qobject_cast<QMenuBar *>(widget)) && _helper->titleBarColor(true).alphaF() < 1.0) {
                     if (event->type() == QEvent::Move || event->type() == QEvent::Show || event->type() == QEvent::Hide) {
                         if (_translucentWidgets.contains(widget->window()) && !_isKonsole)
@@ -3651,9 +3660,9 @@ bool Style::drawFramePrimitive(const QStyleOption *option, QPainter *painter, co
                 && QString(pw->metaObject()->className()).startsWith("Dolphin")) {
                 if (widget->property("VISIBLE-SEPARATORS").toBool()) {
                     QRect copy = rect.adjusted(12, 0, -12, 0);
-                    painter->setRenderHint(QPainter::Antialiasing, false);
+                    painter->setRenderHint(QPainter::Antialiasing);
                     painter->setBrush(Qt::NoBrush);
-                    painter->setPen(QColor(0, 0, 0, 30));
+                    painter->setPen(Qt::NoPen);
                     painter->drawLine(copy.topLeft(), copy.topRight());
                     painter->drawLine(copy.bottomLeft(), copy.bottomRight());
                 }
@@ -5239,6 +5248,8 @@ bool Style::drawMenuBarEmptyAreaControl(const QStyleOption *option, QPainter *pa
             else if (tb->y() > widget->y() + rect.height())
                 shouldDrawShadow = true; // bottom toolbar
         }
+    } else if (_helper->titleBarColor(windowActive).alphaF() * 100.0 < 100) {
+        shouldDrawShadow = false;
     }
 
     if (_isKonsole && StyleConfigData::unifiedTabBarKonsole())
@@ -5317,7 +5328,7 @@ bool Style::drawMenuBarItemControl(const QStyleOption *option, QPainter *painter
         if (DarklyPrivate::possibleTranslucentToolBars.isEmpty())
             shouldDrawShadow = true;
 
-        else if (DarklyPrivate::possibleTranslucentToolBars.size() == 1) {
+        if (DarklyPrivate::possibleTranslucentToolBars.size() == 1) {
             QSet<const QWidget *>::const_iterator i = DarklyPrivate::possibleTranslucentToolBars.constBegin();
             const QToolBar *tb = qobject_cast<const QToolBar *>(*i);
 
@@ -5328,6 +5339,8 @@ bool Style::drawMenuBarItemControl(const QStyleOption *option, QPainter *painter
                 } else if (tb->y() > widget->y() + rect.height())
                     shouldDrawShadow = true; // bottom toolbar
             }
+        } else if (_helper->titleBarColor(windowActive).alphaF() * 100.0 < 100) {
+            shouldDrawShadow = false; // don't draw shadow if using transparent color schemes
         }
 
         if (_isKonsole && StyleConfigData::unifiedTabBarKonsole())
@@ -6650,9 +6663,10 @@ bool Style::drawTabBarTabShapeControl(const QStyleOption *option, QPainter *pain
     documentMode |= (tabWidget ? tabWidget->documentMode() : true);
 
     // define the 'tabbar' background color
+    QColor ColorOfBackground =  StyleConfigData::adjustToDarkThemes() ? QColor(StyleConfigData::tabBGColor()/*0, 0, 0, 160*/) : palette.color(QPalette::Shadow);
     QColor backgroundColor = documentMode
-        ? _helper->isDarkTheme(palette) ? _helper->alphaColor(palette.color(QPalette::Shadow), 0.4) : _helper->alphaColor(palette.color(QPalette::Shadow), 0.2)
-        : _helper->alphaColor(palette.color(QPalette::Shadow), 0.1);
+    ? _helper->isDarkTheme(palette) ? _helper->alphaColor(ColorOfBackground, 0.4) : _helper->alphaColor(ColorOfBackground, 0.2)
+    : _helper->alphaColor(ColorOfBackground, 0.1);
 
     // shadow size
     constexpr int shadowSize = 4;
@@ -6662,8 +6676,11 @@ bool Style::drawTabBarTabShapeControl(const QStyleOption *option, QPainter *pain
     // tab color
     QColor color;
     if (selected)
-        color = (documentMode && !isQtQuickControl && !hasAlteredBackground(widget)) ? palette.color(QPalette::Window) : _helper->frameBackgroundColor(palette);
-
+        if (StyleConfigData::tabUseHighlightColor()) {
+            color = palette.color(QPalette::Highlight);
+        } else {
+            color = (documentMode && !isQtQuickControl && !hasAlteredBackground(widget)) ? palette.color(QPalette::Window) : _helper->frameBackgroundColor(palette);
+        }
     else {
         const auto normal(_helper->alphaColor(palette.color(QPalette::Shadow), 0.1));
         const auto hover(_helper->alphaColor(_helper->hoverColor(palette), 0.2));
@@ -6968,8 +6985,12 @@ bool Style::drawTabBarTabShapeControl(const QStyleOption *option, QPainter *pain
             _helper->renderBoxShadow(painter, backgroundRect, 0, 1, 6, QColor(0, 0, 0, 100), StyleConfigData::cornerRadius(), true);
             painter->setBrush(color);
             painter->drawRoundedRect(backgroundRect, StyleConfigData::cornerRadius(), StyleConfigData::cornerRadius());
-            painter->setBrush(QColor(255, 255, 255, 20));
-            painter->drawRoundedRect(backgroundRect, StyleConfigData::cornerRadius(), StyleConfigData::cornerRadius());
+
+            // Don't lighten the highlight color
+            if (!StyleConfigData::tabUseHighlightColor()) {
+                painter->setBrush(QColor(255, 255, 255, 20));
+                painter->drawRoundedRect(backgroundRect, StyleConfigData::cornerRadius(), StyleConfigData::cornerRadius());
+            }
         }
 
         painter->setClipRegion(oldRegion);

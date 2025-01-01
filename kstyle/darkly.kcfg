@@ -121,7 +121,7 @@
     </entry>
 
     <entry name="ScrollableMenu" type="Bool">
-      <default>false</default>
+      <default>true</default>
     </entry>
     
     <entry name="OldTabbar" type="Bool">
@@ -162,6 +162,10 @@
       <default>false</default>
     </entry>
 
+    <entry name="TabUseHighlightColor" type="Bool">
+      <default>false</default>
+    </entry>
+
     <!-- frames -->
     <entry name="TitleWidgetDrawFrame" type="Bool">
       <default>false</default>
@@ -184,7 +188,7 @@
     </entry>
 
     <entry name="RoundedRubberBandFrame" type="Bool">
-      <default>false</default>
+      <default>true</default>
     </entry>
 
     <!-- window dragging -->
@@ -263,6 +267,12 @@
       <default>100</default>
     </entry>
 
+    <entry name="AdjustToDarkThemes" type="Bool">
+      <default>false</default>
+    </entry>
+    <entry name="TabBGColor" type = "Color">
+      <default>0, 0, 0</default>
+    </entry>
   </group>
 
 </kcfg>
