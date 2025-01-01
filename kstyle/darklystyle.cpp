@@ -369,7 +369,7 @@ void Style::polish(QWidget *widget)
     }
 
     // hack Dolphin's view
-    if (_isDolphin && StyleConfigData::transparentDolphinView() && qobject_cast<QAbstractScrollArea *>(getParent(widget, 2))
+    if (_isDolphin && qobject_cast<QAbstractScrollArea *>(getParent(widget, 2))
         && !qobject_cast<QAbstractScrollArea *>(getParent(widget, 3))) {
         if (widget->autoFillBackground())
             widget->setAutoFillBackground(false);
