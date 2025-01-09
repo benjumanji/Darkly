@@ -23,7 +23,6 @@
 #include "darklydecoration.h"
 
 #include "config-darkly.h"
-#include "config/darklyconfigwidget.h"
 #include "darkly.h"
 #include "darklysettingsprovider.h"
 
