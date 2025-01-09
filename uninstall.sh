@@ -25,11 +25,11 @@ for style in ${styles[@]}; do
     rm /usr/share/icons/hicolor/scalable/apps/${style}-settings.svgz
     rm /usr/lib/lib${style}common6.so*
     rm /usr/lib64/lib${style}common6.so*
-    rm /usr/lib/qt6/plugins/org.kde.kdecoration2/org.kde.${style}.so*
-    rm /usr/lib64/qt6/plugins/org.kde.kdecoration2/org.kde.${style}.so*
+    rm /usr/lib/qt6/plugins/org.kde.kdecoration3/org.kde.${style}.so*
+    rm /usr/lib64/qt6/plugins/org.kde.kdecoration3/org.kde.${style}.so*
     rm /usr/share/kservices6/${style}decorationconfig.desktop
-    rm /usr/lib/qt6/plugins/org.kde.kdecoration2.kcm/kcm_${style}decoration.so*
-    rm /usr/lib64/qt6/plugins/org.kde.kdecoration2.kcm/kcm_${style}decoration.so*
+    rm /usr/lib/qt6/plugins/org.kde.kdecoration3.kcm/kcm_${style}decoration.so*
+    rm /usr/lib64/qt6/plugins/org.kde.kdecoration3.kcm/kcm_${style}decoration.so*
     rm /usr/share/applications/kcm_${style}decoration.desktop
     rm /usr/lib/cmake/${style}/${style}Config.cmake
     rm /usr/lib64/cmake/${style}/${style}Config.cmake
