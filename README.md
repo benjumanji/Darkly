@@ -96,7 +96,7 @@ cd Darkly
 ##### Fedora 40/41
 
 ```
-sudo dnf install -y git cmake extra-cmake-modules "cmake(KDecoration2)" kwin-devel \
+sudo dnf install -y git cmake extra-cmake-modules "cmake(kdecoration3)" kwin-devel \
       kf6-kcolorscheme-devel kf6-kguiaddons-devel kf6-ki18n-devel kf6-kiconthemes-devel \
       kf6-kirigami-devel kf6-kcmutils-devel kf6-frameworkintegration-devel \
       libepoxy-devel "cmake(Qt5Core)" "cmake(Qt5Gui)" "cmake(Qt5DBus)" "cmake(KF5GuiAddons)" \
@@ -172,7 +172,7 @@ distrobox enter lightly
 ```
 
 ```
-sudo dnf install -y git cmake extra-cmake-modules "cmake(KDecoration2)" kwin-devel \
+sudo dnf install -y git cmake extra-cmake-modules "cmake(kdecoration3)" kwin-devel \
     kf6-kcolorscheme-devel kf6-kguiaddons-devel kf6-ki18n-devel kf6-kiconthemes-devel \
     kf6-kirigami-devel kf6-kcmutils-devel \
     libepoxy-devel "cmake(Qt5Core)" "cmake(Qt5Gui)" "cmake(Qt5DBus)" "cmake(KF5GuiAddons)" \
