@@ -1,13 +1,20 @@
 cmake_minimum_required(VERSION 3.16)
-project(darkly)
-set(PROJECT_VERSION "0.5.13")
-set(PROJECT_VERSION_MAJOR 6)
+
+# Get version
+file(READ "${CMAKE_SOURCE_DIR}/VERSION" VER_RAW)
+string(STRIP ${VER_RAW} VER)
+
+project(
+    darkly
+    DESCRIPTION "A modern style for qt applications."
+    VERSION ${VER}
+)
 
 set(KF5_MIN_VERSION "5.102.0")
-set(KF6_MIN_VERSION "6.2.0")
+set(KF6_MIN_VERSION "6.10.0")
 set(KDE_COMPILERSETTINGS_LEVEL "5.82")
 set(QT5_MIN_VERSION "5.15.2")
-set(QT_MIN_VERSION "6.6.0")
+set(QT_MIN_VERSION "6.7.0")
 
 include(GenerateExportHeader)
 include(WriteBasicConfigVersionFile)
@@ -145,7 +152,7 @@ function(build_qt6)
     #add_subdirectory(misc)
 
     if(WITH_DECORATIONS)
-        find_package(KDecoration3 REQUIRED)
+        find_package(kdecoration3 REQUIRED)
         add_subdirectory(kdecoration)
     endif()
 
