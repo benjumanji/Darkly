@@ -25,10 +25,10 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
-#include "config/ui_darklyconfigurationui.h"
 #include "darkly.h"
 #include "darklyexceptionlistwidget.h"
 #include "darklysettings.h"
+#include "ui_darklyconfigurationui.h"
 
 #include <KCModule>
 #include <KSharedConfig>
