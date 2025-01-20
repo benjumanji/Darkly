@@ -223,8 +223,6 @@ cd Darkly
 ./install.sh
 ```
 
----
-
 #### <u>Nixos</u>
 
 1. add `inputs.lightly.url = "github:Bali10050/Darkly";` to `flake.nix`
