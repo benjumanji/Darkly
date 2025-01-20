@@ -214,7 +214,7 @@ sudo apt-get install -y -qq cmake build-essential libkf5config-dev libkdecoratio
       libkf5coreaddons-dev libkf5iconthemes-dev gettext qt3d5-dev libkf5kcmutils-dev \
       qt6-base-dev libkf6coreaddons-dev libkf6colorscheme-dev \
       libkf6config-dev libkf6guiaddons-dev libkf6i18n-dev libkf6iconthemes-dev \
-      libkf6windowsystem-dev libkf6kcmutils-dev libkirigami-dev
+      libkf6windowsystem-dev libkf6kcmutils-dev libkirigami-dev libkf6style-dev
 ```
 
 ```
