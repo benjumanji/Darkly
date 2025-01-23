@@ -425,7 +425,12 @@ public:
     //* return a QRectF with the appropriate size for a rectangle with a pen stroke
     QRectF strokedRect(const QRect &rect, const int penWidth = PenWidth::Frame) const;
 
-    QPixmap coloredIcon(const QIcon &icon, const QPalette &palette, const QSize &size, QIcon::Mode mode = QIcon::Normal, QIcon::State state = QIcon::Off);
+    QPixmap coloredIcon(const QIcon &icon,
+                        const QPalette &palette,
+                        const QSize &size,
+                        qreal devicePixelRatio,
+                        QIcon::Mode mode = QIcon::Normal,
+                        QIcon::State state = QIcon::Off);
 
 protected:
     //* return rounded path in a given rect, with only selected corners rounded, and for a given radius
