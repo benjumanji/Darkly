@@ -4,7 +4,7 @@ This fork attempts to revive lightly with a different approach from boehs, with 
 
 This means that this fork allows real changes, and not just maintainence.
 
-![Darkly](https://github.com/user-attachments/assets/972ed626-87e3-494f-96f2-9408adee4fad)
+![Darkly](https://github.com/user-attachments/assets/0d60725e-c146-4e1e-9889-fe8317d52b22)
 
 ## What changed?
 
@@ -214,7 +214,7 @@ sudo apt-get install -y -qq cmake build-essential libkf5config-dev libkdecoratio
       libkf5coreaddons-dev libkf5iconthemes-dev gettext qt3d5-dev libkf5kcmutils-dev \
       qt6-base-dev libkf6coreaddons-dev libkf6colorscheme-dev \
       libkf6config-dev libkf6guiaddons-dev libkf6i18n-dev libkf6iconthemes-dev \
-      libkf6windowsystem-dev libkf6kcmutils-dev libkirigami-dev
+      libkf6windowsystem-dev libkf6kcmutils-dev libkirigami-dev libkf6style-dev
 ```
 
 ```
@@ -222,8 +222,6 @@ git clone --single-branch --depth=1 https://github.com/Bali10050/Darkly.git
 cd Darkly
 ./install.sh
 ```
-
----
 
 #### <u>Nixos</u>
 
