@@ -11,7 +11,7 @@ env:
   PKGBUILD: $GITHUB_WORKSPACE/.github/assets/pkgbuild/PKGBUILD
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     container: archlinux:latest
     steps:
       - name: Checkout local

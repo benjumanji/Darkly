@@ -10,7 +10,7 @@ env:
   BUILD_REPO: https://github.com/Bali10050/Darkly
 jobs:
   release-ci:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       VERSION: ${{ steps.step_getlatest_tag.outputs.VERSION }}
       ASSET: ${{ steps.step_get_asset.outputs.ASSET }}

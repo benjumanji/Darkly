@@ -14,7 +14,7 @@ env:
   SPEC_FILE: $GITHUB_WORKSPACE/.github/assets/specs/darkly.spec
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     container: opensuse/tumbleweed:latest
     steps:
       - name: Install build dependencies
