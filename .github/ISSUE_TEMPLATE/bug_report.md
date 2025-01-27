@@ -16,7 +16,6 @@ If applicable, add screenshots to help explain your problem.
 **Distribution (please complete the following information):**
  - Name: [e.g. Arch Linux]
 
-
 **Color scheme in use (please complete the following information):**
  - Name: [e.g. Breeze Dark]
 
