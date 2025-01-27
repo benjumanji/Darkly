@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     container: deltacopy/darkly-kde-neon:0.1
     steps:
-      - uses: actions/cache/restore@v4.1.0
+      - uses: actions/cache/restore@v4
         id: cache
         with:
           key: ${{ runner.os }}-v${{ inputs.version }}-${{ hashFiles(inputs.cache-file-path) }}

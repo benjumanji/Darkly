@@ -17,8 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     container: deltacopy/kubuntu:0.1
     steps:
-      - uses: actions/cache/restore@v4.1.0
-        id: cache
+      - uses: actions/cache/restore@v4
         with:
           key: ${{ runner.os }}-v${{ inputs.version }}-${{ hashFiles(inputs.cache-file-path) }}
           path: ${{ inputs.cache-file-path }}

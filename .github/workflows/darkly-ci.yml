@@ -44,7 +44,7 @@ jobs:
         run: |
           curl -L $BUILD_REPO/archive/refs/tags/${{ env.LATEST_TAG }}.tar.gz --output darkly-${{ env.LATEST_TAG }}.tar.gz
           echo "ASSET=darkly-${{ env.LATEST_TAG }}.tar.gz" >> "$GITHUB_OUTPUT"
-      - uses: actions/cache/save@v4.1.0
+      - uses: actions/cache/save@v4
         id: cache
         with:
           path: ${{ steps.step_get_asset.outputs.ASSET }}
