@@ -14,7 +14,7 @@ env:
   SPEC_FILE: $GITHUB_WORKSPACE/.github/assets/specs/darkly.spec
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     container: opensuse/tumbleweed:latest
     steps:
       - name: Install build dependencies
@@ -24,7 +24,7 @@ jobs:
             kdecoration6-devel kf6-kconfig-devel kf6-kconfigwidgets-devel \
             kf6-kcoreaddons-devel kf6-frameworkintegration-devel kf6-kcmutils-devel \
             kf6-kwindowsystem-devel kwayland6-devel libplasma6-devel kf6-kirigami-devel fdupes
-      - uses: actions/cache/restore@v4.1.0
+      - uses: actions/cache/restore@v4
         id: cache
         with:
           key: ${{ runner.os }}-v${{ inputs.version }}-${{ hashFiles(inputs.cache-file-path) }}

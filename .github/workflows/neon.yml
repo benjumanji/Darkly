@@ -14,10 +14,10 @@ on:
         type: string
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     container: deltacopy/darkly-kde-neon:0.1
     steps:
-      - uses: actions/cache/restore@v4.1.0
+      - uses: actions/cache/restore@v4
         id: cache
         with:
           key: ${{ runner.os }}-v${{ inputs.version }}-${{ hashFiles(inputs.cache-file-path) }}
