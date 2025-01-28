@@ -5231,7 +5231,8 @@ bool Style::drawMenuBarEmptyAreaControl(const QStyleOption *option, QPainter *pa
             background.setAlphaF(opacity);
             painter->fillRect(rect, background);
         } else if (StyleConfigData::menuBarOpacity() == 0) {
-            background.setAlphaF(_helper->titleBarColor(windowActive).alphaF());
+            opacity = 0.0;
+            background.setAlphaF(opacity);
             painter->fillRect(rect, background);
         } else if (StyleConfigData::menuBarOpacity() < 100 && StyleConfigData::menuBarOpacity() > 0) {
             // lower the opacity
@@ -5320,8 +5321,8 @@ bool Style::drawMenuBarItemControl(const QStyleOption *option, QPainter *painter
             background.setAlphaF(opacity);
             painter->fillRect(rect, background);
         } else if (StyleConfigData::menuBarOpacity() == 0) {
-            // use the same titlebar color
-            background.setAlphaF(_helper->titleBarColor(windowActive).alphaF());
+            opacity = 0.0;
+            background.setAlphaF(opacity);
             painter->fillRect(rect, background);
         } else if (StyleConfigData::menuBarOpacity() < 100 && StyleConfigData::menuBarOpacity() > 0) {
             // lower the opacity
@@ -5734,15 +5735,33 @@ bool Style::drawToolBarBackgroundControl(const QStyleOption *option, QPainter *p
     }
 
     // qDebug() << _blurHelper->_sregisteredWidgets;
-    const int opacity = _helper->titleBarColor(windowActive).alphaF() * 100.0;
-
-    painter->setPen(Qt::NoPen);
-
-    _helper->renderTransparentArea(painter, rect);
+    float opacity = 0.0;
 
     // paint background
     QColor backgroundColor = palette.color(QPalette::Window);
-    if (sideToolbarDolphin) {
+
+    painter->setPen(Qt::NoPen);
+
+    if (StyleConfigData::toolBarOpacity() == 100) {
+        // opacity is at 100%
+        opacity = 1.0;
+        backgroundColor.setAlphaF(opacity);
+        painter->fillRect(rect, backgroundColor);
+    } else if (StyleConfigData::toolBarOpacity() == 0) {
+        // use the same titlebar color
+        _helper->renderTransparentArea(painter, rect);
+        opacity = 0.0;
+        backgroundColor.setAlphaF(opacity);
+        painter->fillRect(rect, backgroundColor);
+    } else if (StyleConfigData::toolBarOpacity() < 100 && StyleConfigData::toolBarOpacity() > 0) {
+        // lower the opacity
+        _helper->renderTransparentArea(painter, rect);
+        opacity = StyleConfigData::toolBarOpacity() / 100.0;
+        backgroundColor.setAlphaF(opacity);
+        painter->fillRect(rect, backgroundColor);
+    }
+
+    if (sideToolbarDolphin && _isDolphin) {
         backgroundColor.setAlphaF(StyleConfigData::dolphinSidebarOpacity() / 100.0 - 0.15);
         painter->fillRect(rect, backgroundColor);
 
@@ -5765,9 +5784,6 @@ bool Style::drawToolBarBackgroundControl(const QStyleOption *option, QPainter *p
         painter->drawLine(rect.topLeft() + QPoint(0, 3), rect.topRight() + QPoint(0, 3));
 
         return true;
-    } else {
-        backgroundColor.setAlphaF(opacity / 100.0);
-        painter->fillRect(rect, backgroundColor);
     }
 
     if (StyleConfigData::toolBarDrawSeparator() && !_isDolphin) {
