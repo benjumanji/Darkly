@@ -340,7 +340,9 @@ void Style::polish(QWidget *widget)
             // konsole handle blur and translucency
             if (_isKonsole) {
                 _translucentWidgets.insert(widget);
-                _blurHelper->registerWidget(widget, _isDolphin);
+                if (widget->palette().color(widget->backgroundRole()).alpha() < 255 || _helper->titleBarColor(true).alphaF() * 100.0 < 100) {
+                    _blurHelper->registerWidget(widget, _isDolphin);
+                }
                 // paint the background in event filter
                 addEventFilter(widget);
                 break;
