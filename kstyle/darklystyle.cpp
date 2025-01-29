@@ -337,9 +337,14 @@ void Style::polish(QWidget *widget)
             if (widget->windowFlags().testFlag(Qt::FramelessWindowHint))
                 break;
 
-            // konsole handle blur and translucency itself
+            // konsole handle blur and translucency
             if (_isKonsole) {
                 _translucentWidgets.insert(widget);
+                if (widget->palette().color(widget->backgroundRole()).alpha() < 255 || _helper->titleBarColor(true).alphaF() * 100.0 < 100) {
+                    _blurHelper->registerWidget(widget, _isDolphin);
+                }
+                // paint the background in event filter
+                addEventFilter(widget);
                 break;
             }
 
