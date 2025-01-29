@@ -204,7 +204,7 @@ void StyleConfig::updateChanged()
         _menuBarOpacitySpinBox->setValue(_menuBarOpacity->value());
     } else if (_toolBarOpacity->value() != StyleConfigData::toolBarOpacity()) {
         modified = true;
-        _menuBarOpacitySpinBox->setValue(_menuBarOpacity->value());
+        _toolBarOpacitySpinBox->setValue(_toolBarOpacity->value());
     } else if (_kTextEditDrawFrame->isChecked() != StyleConfigData::kTextEditDrawFrame())
         modified = true;
     else if (_tabBarDrawCenteredTabs->isChecked() != StyleConfigData::tabBarDrawCenteredTabs())
