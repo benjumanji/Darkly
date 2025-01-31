@@ -319,7 +319,7 @@
          <x>10</x>
          <y>0</y>
          <width>315</width>
-         <height>338</height>
+         <height>351</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -384,6 +384,16 @@
          <widget class="QCheckBox" name="_tabUseHighlightColor">
           <property name="text">
            <string>Use highlight color as selected tab background</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="_tabUseBrighterCloseIcon">
+          <property name="toolTip">
+           <string>Increases the brightness of tab close icons</string>
+          </property>
+          <property name="text">
+           <string>Use brighter close icon</string>
           </property>
          </widget>
         </item>

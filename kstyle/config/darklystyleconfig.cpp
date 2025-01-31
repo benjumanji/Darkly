@@ -91,6 +91,7 @@ StyleConfig::StyleConfig(QWidget *parent)
     connect(_transparentDolphinView, &QAbstractButton::toggled, this, &StyleConfig::updateChanged);
     connect(_cornerRadius, SIGNAL(valueChanged(int)), SLOT(updateChanged()));
     connect(_tabUseHighlightColor, &QAbstractButton::toggled, this, &StyleConfig::updateChanged);
+    connect(_tabUseBrighterCloseIcon, &QAbstractButton::toggled, this, &StyleConfig::updateChanged);
 }
 
 //__________________________________________________________________
@@ -128,6 +129,7 @@ void StyleConfig::save()
     StyleConfigData::setTransparentDolphinView(_transparentDolphinView->isChecked());
     StyleConfigData::setCornerRadius(_cornerRadius->value());
     StyleConfigData::setTabUseHighlightColor(_tabUseHighlightColor->isChecked());
+    StyleConfigData::setTabUseBrighterCloseIcon(_tabUseBrighterCloseIcon->isChecked());
 
     StyleConfigData::self()->save();
 
@@ -227,6 +229,8 @@ void StyleConfig::updateChanged()
         modified = true;
     else if (_tabUseHighlightColor->isChecked() != StyleConfigData::tabUseHighlightColor())
         modified = true;
+    else if (_tabUseBrighterCloseIcon->isChecked() != StyleConfigData::tabUseBrighterCloseIcon())
+        modified = true;
 
     emit changed(modified);
 }
@@ -271,6 +275,7 @@ void StyleConfig::load()
     _transparentDolphinView->setChecked(StyleConfigData::transparentDolphinView());
     _cornerRadius->setValue(StyleConfigData::cornerRadius());
     _tabUseHighlightColor->setChecked(StyleConfigData::tabUseHighlightColor());
+    _tabUseBrighterCloseIcon->setChecked(StyleConfigData::tabUseBrighterCloseIcon());
     _versionNumber->setText(DARKLY_VERSION_STRING);
 }
 
