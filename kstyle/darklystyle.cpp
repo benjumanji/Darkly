@@ -8282,22 +8282,46 @@ QIcon Style::titleBarButtonIcon(StandardPixmap standardPixmap, const QStyleOptio
         QIcon::State _state;
     };
 
+    static const QList<qreal> defaultBias = {0.5, 0.5, 0.5, 0.2, 0.7, 0.7, 0.7, 0.2};
+    static const QList<qreal> brighterBias = {1.0, 1.0, 1.0, 0.5, 1.0, 1.0, 1.0, 0.5};
+
     // map colors to icon states
-    const QList<IconData> iconTypes = {
 
-        // state off icons
-        {KColorUtils::mix(palette.color(QPalette::Window), base, 0.5), invertNormalState, QIcon::Normal, QIcon::Off},
-        {KColorUtils::mix(palette.color(QPalette::Window), selected, 0.5), invertNormalState, QIcon::Selected, QIcon::Off},
-        {KColorUtils::mix(palette.color(QPalette::Window), negative, 0.5), true, QIcon::Active, QIcon::Off},
-        {KColorUtils::mix(palette.color(QPalette::Window), base, 0.2), invertNormalState, QIcon::Disabled, QIcon::Off},
+    QList<IconData> iconTypes;
 
-        // state on icons
-        {KColorUtils::mix(palette.color(QPalette::Window), negative, 0.7), true, QIcon::Normal, QIcon::On},
-        {KColorUtils::mix(palette.color(QPalette::Window), negativeSelected, 0.7), true, QIcon::Selected, QIcon::On},
-        {KColorUtils::mix(palette.color(QPalette::Window), negative, 0.7), true, QIcon::Active, QIcon::On},
-        {KColorUtils::mix(palette.color(QPalette::Window), base, 0.2), invertNormalState, QIcon::Disabled, QIcon::On}
+    if (StyleConfigData::tabUseBrighterCloseIcon()) {
+        iconTypes = {
 
-    };
+            // state off icons
+            {KColorUtils::mix(palette.color(QPalette::Window), base, 1.0), invertNormalState, QIcon::Normal, QIcon::Off},
+            {KColorUtils::mix(palette.color(QPalette::Window), selected, 1.0), invertNormalState, QIcon::Selected, QIcon::Off},
+            {KColorUtils::mix(palette.color(QPalette::Window), negative, 1.0), true, QIcon::Active, QIcon::Off},
+            {KColorUtils::mix(palette.color(QPalette::Window), base, 0.5), invertNormalState, QIcon::Disabled, QIcon::Off},
+
+            // state on icons
+            {KColorUtils::mix(palette.color(QPalette::Window), negative, 1.0), true, QIcon::Normal, QIcon::On},
+            {KColorUtils::mix(palette.color(QPalette::Window), negativeSelected, 1.0), true, QIcon::Selected, QIcon::On},
+            {KColorUtils::mix(palette.color(QPalette::Window), negative, 1.0), true, QIcon::Active, QIcon::On},
+            {KColorUtils::mix(palette.color(QPalette::Window), base, 0.5), invertNormalState, QIcon::Disabled, QIcon::On}
+
+        };
+    } else {
+        iconTypes = {
+
+            // state off icons
+            {KColorUtils::mix(palette.color(QPalette::Window), base, 0.5), invertNormalState, QIcon::Normal, QIcon::Off},
+            {KColorUtils::mix(palette.color(QPalette::Window), selected, 0.5), invertNormalState, QIcon::Selected, QIcon::Off},
+            {KColorUtils::mix(palette.color(QPalette::Window), negative, 0.5), true, QIcon::Active, QIcon::Off},
+            {KColorUtils::mix(palette.color(QPalette::Window), base, 0.2), invertNormalState, QIcon::Disabled, QIcon::Off},
+
+            // state on icons
+            {KColorUtils::mix(palette.color(QPalette::Window), negative, 0.7), true, QIcon::Normal, QIcon::On},
+            {KColorUtils::mix(palette.color(QPalette::Window), negativeSelected, 0.7), true, QIcon::Selected, QIcon::On},
+            {KColorUtils::mix(palette.color(QPalette::Window), negative, 0.7), true, QIcon::Active, QIcon::On},
+            {KColorUtils::mix(palette.color(QPalette::Window), base, 0.2), invertNormalState, QIcon::Disabled, QIcon::On}
+
+        };
+    }
 
     // default icon sizes
     static const QList<int> iconSizes = {8, 16, 22, 32, 48};
