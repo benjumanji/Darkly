@@ -3585,16 +3585,16 @@ QSize Style::tabBarTabSizeFromContents(const QStyleOption *option, const QSize &
     if (verticalTabs) {
         size.rheight() += widthIncrement;
         if (hasIcon && !hasText)
-            size = size.expandedTo(QSize(Metrics::TabBar_TabMinHeight, 0));
+            size = size.expandedTo(QSize(Metrics::TabBar_TabMinHeight + StyleConfigData::tabsHeight(), 0));
         else
-            size = size.expandedTo(QSize(Metrics::TabBar_TabMinHeight, Metrics::TabBar_TabMinWidth));
+            size = size.expandedTo(QSize(Metrics::TabBar_TabMinHeight + StyleConfigData::tabsHeight(), Metrics::TabBar_TabMinWidth));
 
     } else {
         size.rwidth() += widthIncrement;
         if (hasIcon && !hasText)
-            size = size.expandedTo(QSize(0, Metrics::TabBar_TabMinHeight));
+            size = size.expandedTo(QSize(0, Metrics::TabBar_TabMinHeight + StyleConfigData::tabsHeight()));
         else
-            size = size.expandedTo(QSize(Metrics::TabBar_TabMinWidth, Metrics::TabBar_TabMinHeight + (documentMode ? 0 : 2 * 4)));
+            size = size.expandedTo(QSize(Metrics::TabBar_TabMinWidth, Metrics::TabBar_TabMinHeight + StyleConfigData::tabsHeight() + (documentMode ? 0 : 2 * 4)));
     }
 
     return size;

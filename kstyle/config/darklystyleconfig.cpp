@@ -92,6 +92,7 @@ StyleConfig::StyleConfig(QWidget *parent)
     connect(_cornerRadius, SIGNAL(valueChanged(int)), SLOT(updateChanged()));
     connect(_tabUseHighlightColor, &QAbstractButton::toggled, this, &StyleConfig::updateChanged);
     connect(_tabUseBrighterCloseIcon, &QAbstractButton::toggled, this, &StyleConfig::updateChanged);
+    connect(_tabsHeight, &QAbstractSlider::valueChanged, this, &StyleConfig::updateChanged);
 }
 
 //__________________________________________________________________
@@ -130,6 +131,7 @@ void StyleConfig::save()
     StyleConfigData::setCornerRadius(_cornerRadius->value());
     StyleConfigData::setTabUseHighlightColor(_tabUseHighlightColor->isChecked());
     StyleConfigData::setTabUseBrighterCloseIcon(_tabUseBrighterCloseIcon->isChecked());
+    StyleConfigData::setTabsHeight(_tabsHeight->value());
 
     StyleConfigData::self()->save();
 
@@ -231,6 +233,9 @@ void StyleConfig::updateChanged()
         modified = true;
     else if (_tabUseBrighterCloseIcon->isChecked() != StyleConfigData::tabUseBrighterCloseIcon())
         modified = true;
+    else if (_tabsHeight->value() != StyleConfigData::tabsHeight())
+        modified = true;
+
 
     emit changed(modified);
 }
@@ -277,6 +282,7 @@ void StyleConfig::load()
     _tabUseHighlightColor->setChecked(StyleConfigData::tabUseHighlightColor());
     _tabUseBrighterCloseIcon->setChecked(StyleConfigData::tabUseBrighterCloseIcon());
     _versionNumber->setText(DARKLY_VERSION_STRING);
+    _tabsHeight->setValue(StyleConfigData::tabsHeight());
 }
 
 }

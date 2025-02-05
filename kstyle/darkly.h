@@ -24,6 +24,7 @@
 #include <QPointer>
 #include <QScopedPointer>
 #include <QWeakPointer>
+#include "darklystyleconfigdata.h"
 
 namespace Darkly
 {

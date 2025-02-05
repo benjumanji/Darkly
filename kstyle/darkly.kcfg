@@ -170,6 +170,10 @@
       <default>false</default>
     </entry>
 
+    <entry name="TabsHeight" type="Int">
+      <default>0</default>
+    </entry>
+
     <!-- frames -->
     <entry name="TitleWidgetDrawFrame" type="Bool">
       <default>false</default>
