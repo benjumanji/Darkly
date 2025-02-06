@@ -809,5 +809,6 @@ void Decoration::createShadow()
 
     setShadow(g_sShadow);
 }
+} // namespace
 
 #include "darklydecoration.moc"
