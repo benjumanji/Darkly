@@ -56,7 +56,7 @@ public:
     virtual ~Decoration();
 
     //* paint
-    void paint(QPainter *painter, const QRect &repaintRegion) override;
+    void paint(QPainter *painter, const QRectF &repaintRegion) override;
 
     //* internal settings
     InternalSettingsPtr internalSettings() const
@@ -130,7 +130,7 @@ private:
 
     void createButtons();
     void calculateWindowAndTitleBarShapes(const bool windowShapeOnly = false);
-    void paintTitleBar(QPainter *painter, const QRect &repaintRegion);
+    void paintTitleBar(QPainter *painter, const QRectF &repaintRegion);
     void createShadow();
 
     //*@name border size

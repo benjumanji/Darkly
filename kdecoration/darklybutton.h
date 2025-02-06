@@ -47,7 +47,7 @@ public:
     static Button *create(KDecoration3::DecorationButtonType type, KDecoration3::Decoration *decoration, QObject *parent);
 
     //* render
-    virtual void paint(QPainter *painter, const QRect &repaintRegion) override;
+    virtual void paint(QPainter *painter, const QRectF &repaintRegion) override;
 
     //* flag
     enum Flag {

@@ -565,7 +565,7 @@ void Decoration::updateButtonsGeometry()
 }
 
 //________________________________________________________________
-void Decoration::paint(QPainter *painter, const QRect &repaintRegion)
+void Decoration::paint(QPainter *painter, const QRectF &repaintRegion)
 {
     // TODO: optimize based on repaintRegion
     auto c = window();
@@ -608,7 +608,7 @@ void Decoration::paint(QPainter *painter, const QRect &repaintRegion)
 }
 
 //________________________________________________________________
-void Decoration::paintTitleBar(QPainter *painter, const QRect &repaintRegion)
+void Decoration::paintTitleBar(QPainter *painter, const QRectF &repaintRegion)
 {
     const auto c = window();
 
