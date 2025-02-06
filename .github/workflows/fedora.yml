@@ -40,7 +40,7 @@ jobs:
           fail-on-cache-miss: true
       - name: Install dependencies
         run: |
-          sudo dnf install -y -q git rpmdevtools rpmlint cmake extra-cmake-modules "cmake(KDecoration2)" kwin-devel libepoxy-devel \
+          sudo dnf install -y -q git rpmdevtools rpmlint cmake extra-cmake-modules "cmake(KDecoration3)" kwin-devel libepoxy-devel \
                 "cmake(Qt5Core)" "cmake(Qt5Gui)" "cmake(Qt5DBus)" "cmake(KF5GuiAddons)" "cmake(KF5WindowSystem)" \
                 "cmake(KF5I18n)" "cmake(KF5CoreAddons)" "cmake(KF5ConfigWidgets)" "cmake(Qt5UiTools)" "cmake(KF5GlobalAccel)" \
                 "cmake(KF5IconThemes)" "cmake(KF5Init)" "cmake(KF5KIO)" "cmake(KF5Notifications)" kf5-kpackage-devel kf5-kcmutils-devel \

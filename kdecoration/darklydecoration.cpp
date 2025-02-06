@@ -28,7 +28,6 @@
 #include "darklysettingsprovider.h"
 
 #include "darklybutton.h"
-#include "darklysizegrip.h"
 
 #include "darklyboxshadowrenderer.h"
 
@@ -159,8 +158,6 @@ Decoration::~Decoration()
         // last deco destroyed, clean up shadow
         g_sShadow.reset();
     }
-
-    deleteSizeGrip();
 }
 
 //________________________________________________________________
@@ -170,9 +167,6 @@ void Decoration::setOpacity(qreal value)
         return;
     m_opacity = value;
     update();
-
-    if (m_sizeGrip)
-        m_sizeGrip->update();
 }
 
 //________________________________________________________________
@@ -363,15 +357,6 @@ void Decoration::updateAnimationState()
 }
 
 //________________________________________________________________
-void Decoration::updateSizeGripVisibility()
-{
-    auto c = window();
-    if (m_sizeGrip) {
-        m_sizeGrip->setVisible(c->isResizeable() && !isMaximized() && !c->isShaded());
-    }
-}
-
-//________________________________________________________________
 int Decoration::borderSize(bool bottom) const
 {
     const int baseSize = settings()->smallSpacing();
@@ -436,12 +421,6 @@ void Decoration::reconfigure()
 
     // shadow
     createShadow();
-
-    // size grip
-    if (hasNoBorders() && m_internalSettings->drawSizeGrip())
-        createSizeGrip();
-    else
-        deleteSizeGrip();
 
     updateBlur();
 }
@@ -565,7 +544,7 @@ void Decoration::updateButtonsGeometry()
 }
 
 //________________________________________________________________
-void Decoration::paint(QPainter *painter, const QRect &repaintRegion)
+void Decoration::paint(QPainter *painter, const QRectF &repaintRegion)
 {
     // TODO: optimize based on repaintRegion
     auto c = window();
@@ -608,12 +587,9 @@ void Decoration::paint(QPainter *painter, const QRect &repaintRegion)
 }
 
 //________________________________________________________________
-void Decoration::paintTitleBar(QPainter *painter, const QRect &repaintRegion)
+void Decoration::paintTitleBar(QPainter *painter, const QRectF &repaintRegion)
 {
     const auto c = window();
-
-    if (!m_titleRect.intersects(repaintRegion))
-        return;
 
     painter->save();
     painter->setPen(Qt::NoPen);
@@ -833,41 +809,6 @@ void Decoration::createShadow()
 
     setShadow(g_sShadow);
 }
-
-//_________________________________________________________________
-void Decoration::createSizeGrip()
-{
-    // do nothing if size grip already exist
-    if (m_sizeGrip)
-        return;
-
-#if DARKLY_HAVE_X11
-    if (!QX11Info::isPlatformX11())
-        return;
-
-    // access window
-    auto c = window().data();
-    if (!c)
-        return;
-
-    if (c->windowId() != 0) {
-        m_sizeGrip = new SizeGrip(this);
-        connect(c, &KDecoration3::DecoratedWindow::maximizedChanged, this, &Decoration::updateSizeGripVisibility);
-        connect(c, &KDecoration3::DecoratedWindow::shadedChanged, this, &Decoration::updateSizeGripVisibility);
-        connect(c, &KDecoration3::DecoratedWindow::resizeableChanged, this, &Decoration::updateSizeGripVisibility);
-    }
-#endif
-}
-
-//_________________________________________________________________
-void Decoration::deleteSizeGrip()
-{
-    if (m_sizeGrip) {
-        m_sizeGrip->deleteLater();
-        m_sizeGrip = nullptr;
-    }
-}
-
 } // namespace
 
 #include "darklydecoration.moc"

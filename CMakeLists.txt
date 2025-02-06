@@ -152,7 +152,7 @@ function(build_qt6)
     #add_subdirectory(misc)
 
     if(WITH_DECORATIONS)
-        find_package(kdecoration3 REQUIRED)
+        find_package(KDecoration3 REQUIRED)
         add_subdirectory(kdecoration)
     endif()
 

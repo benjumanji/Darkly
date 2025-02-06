@@ -43,7 +43,6 @@ class DecorationButtonGroup;
 
 namespace Darkly
 {
-class SizeGrip;
 class Decoration : public KDecoration3::Decoration
 {
     Q_OBJECT
@@ -56,7 +55,7 @@ public:
     virtual ~Decoration();
 
     //* paint
-    void paint(QPainter *painter, const QRect &repaintRegion) override;
+    void paint(QPainter *painter, const QRectF &repaintRegion) override;
 
     //* internal settings
     InternalSettingsPtr internalSettings() const
@@ -122,7 +121,6 @@ private Q_SLOTS:
     void updateButtonsGeometryDelayed();
     void updateTitleBar();
     void updateAnimationState();
-    void updateSizeGripVisibility();
 
 private:
     //* return the rect in which caption will be drawn
@@ -130,7 +128,7 @@ private:
 
     void createButtons();
     void calculateWindowAndTitleBarShapes(const bool windowShapeOnly = false);
-    void paintTitleBar(QPainter *painter, const QRect &repaintRegion);
+    void paintTitleBar(QPainter *painter, const QRectF &repaintRegion);
     void createShadow();
 
     //*@name border size
@@ -141,22 +139,9 @@ private:
     inline bool hasNoSideBorders() const;
     //@}
 
-    //*@name size grip
-    //@{
-    void createSizeGrip();
-    void deleteSizeGrip();
-    SizeGrip *sizeGrip() const
-    {
-        return m_sizeGrip;
-    }
-    //@}
-
     InternalSettingsPtr m_internalSettings;
     KDecoration3::DecorationButtonGroup *m_leftButtons = nullptr;
     KDecoration3::DecorationButtonGroup *m_rightButtons = nullptr;
-
-    //* size grip widget
-    SizeGrip *m_sizeGrip = nullptr;
 
     //* active state change animation
     QVariantAnimation *m_animation;
