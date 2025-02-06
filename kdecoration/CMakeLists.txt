@@ -14,7 +14,6 @@ set(darklydecoration_SRCS
     darklydecoration.cpp
     darklyexceptionlist.cpp
     darklysettingsprovider.cpp
-    darklysizegrip.cpp
 )
 ### build library
 kconfig_add_kcfg_files(darklydecoration_SRCS darklysettings.kcfgc)

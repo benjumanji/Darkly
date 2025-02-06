@@ -141,22 +141,9 @@ private:
     inline bool hasNoSideBorders() const;
     //@}
 
-    //*@name size grip
-    //@{
-    void createSizeGrip();
-    void deleteSizeGrip();
-    SizeGrip *sizeGrip() const
-    {
-        return m_sizeGrip;
-    }
-    //@}
-
     InternalSettingsPtr m_internalSettings;
     KDecoration3::DecorationButtonGroup *m_leftButtons = nullptr;
     KDecoration3::DecorationButtonGroup *m_rightButtons = nullptr;
-
-    //* size grip widget
-    SizeGrip *m_sizeGrip = nullptr;
 
     //* active state change animation
     QVariantAnimation *m_animation;
