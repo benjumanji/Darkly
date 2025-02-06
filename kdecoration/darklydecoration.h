@@ -43,7 +43,6 @@ class DecorationButtonGroup;
 
 namespace Darkly
 {
-class SizeGrip;
 class Decoration : public KDecoration3::Decoration
 {
     Q_OBJECT
@@ -122,7 +121,6 @@ private Q_SLOTS:
     void updateButtonsGeometryDelayed();
     void updateTitleBar();
     void updateAnimationState();
-    void updateSizeGripVisibility();
 
 private:
     //* return the rect in which caption will be drawn

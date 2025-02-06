@@ -158,8 +158,6 @@ Decoration::~Decoration()
         // last deco destroyed, clean up shadow
         g_sShadow.reset();
     }
-
-    deleteSizeGrip();
 }
 
 //________________________________________________________________
@@ -169,9 +167,6 @@ void Decoration::setOpacity(qreal value)
         return;
     m_opacity = value;
     update();
-
-    if (m_sizeGrip)
-        m_sizeGrip->update();
 }
 
 //________________________________________________________________
@@ -358,15 +353,6 @@ void Decoration::updateAnimationState()
 
     } else {
         update();
-    }
-}
-
-//________________________________________________________________
-void Decoration::updateSizeGripVisibility()
-{
-    auto c = window();
-    if (m_sizeGrip) {
-        m_sizeGrip->setVisible(c->isResizeable() && !isMaximized() && !c->isShaded());
     }
 }
 
