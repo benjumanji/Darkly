@@ -337,9 +337,14 @@ void Style::polish(QWidget *widget)
             if (widget->windowFlags().testFlag(Qt::FramelessWindowHint))
                 break;
 
-            // konsole handle blur and translucency itself
+            // konsole handle blur and translucency
             if (_isKonsole) {
                 _translucentWidgets.insert(widget);
+                if (widget->palette().color(widget->backgroundRole()).alpha() < 255 || _helper->titleBarColor(true).alphaF() * 100.0 < 100) {
+                    _blurHelper->registerWidget(widget, _isDolphin);
+                }
+                // paint the background in event filter
+                addEventFilter(widget);
                 break;
             }
 
@@ -3580,16 +3585,16 @@ QSize Style::tabBarTabSizeFromContents(const QStyleOption *option, const QSize &
     if (verticalTabs) {
         size.rheight() += widthIncrement;
         if (hasIcon && !hasText)
-            size = size.expandedTo(QSize(Metrics::TabBar_TabMinHeight, 0));
+            size = size.expandedTo(QSize(Metrics::TabBar_TabMinHeight + StyleConfigData::tabsHeight(), 0));
         else
-            size = size.expandedTo(QSize(Metrics::TabBar_TabMinHeight, Metrics::TabBar_TabMinWidth));
+            size = size.expandedTo(QSize(Metrics::TabBar_TabMinHeight + StyleConfigData::tabsHeight(), Metrics::TabBar_TabMinWidth));
 
     } else {
         size.rwidth() += widthIncrement;
         if (hasIcon && !hasText)
-            size = size.expandedTo(QSize(0, Metrics::TabBar_TabMinHeight));
+            size = size.expandedTo(QSize(0, Metrics::TabBar_TabMinHeight + StyleConfigData::tabsHeight()));
         else
-            size = size.expandedTo(QSize(Metrics::TabBar_TabMinWidth, Metrics::TabBar_TabMinHeight + (documentMode ? 0 : 2 * 4)));
+            size = size.expandedTo(QSize(Metrics::TabBar_TabMinWidth, Metrics::TabBar_TabMinHeight + StyleConfigData::tabsHeight() + (documentMode ? 0 : 2 * 4)));
     }
 
     return size;
@@ -5231,7 +5236,8 @@ bool Style::drawMenuBarEmptyAreaControl(const QStyleOption *option, QPainter *pa
             background.setAlphaF(opacity);
             painter->fillRect(rect, background);
         } else if (StyleConfigData::menuBarOpacity() == 0) {
-            background.setAlphaF(_helper->titleBarColor(windowActive).alphaF());
+            opacity = 0.0;
+            background.setAlphaF(opacity);
             painter->fillRect(rect, background);
         } else if (StyleConfigData::menuBarOpacity() < 100 && StyleConfigData::menuBarOpacity() > 0) {
             // lower the opacity
@@ -5320,8 +5326,8 @@ bool Style::drawMenuBarItemControl(const QStyleOption *option, QPainter *painter
             background.setAlphaF(opacity);
             painter->fillRect(rect, background);
         } else if (StyleConfigData::menuBarOpacity() == 0) {
-            // use the same titlebar color
-            background.setAlphaF(_helper->titleBarColor(windowActive).alphaF());
+            opacity = 0.0;
+            background.setAlphaF(opacity);
             painter->fillRect(rect, background);
         } else if (StyleConfigData::menuBarOpacity() < 100 && StyleConfigData::menuBarOpacity() > 0) {
             // lower the opacity
@@ -5734,15 +5740,33 @@ bool Style::drawToolBarBackgroundControl(const QStyleOption *option, QPainter *p
     }
 
     // qDebug() << _blurHelper->_sregisteredWidgets;
-    const int opacity = _helper->titleBarColor(windowActive).alphaF() * 100.0;
-
-    painter->setPen(Qt::NoPen);
-
-    _helper->renderTransparentArea(painter, rect);
+    float opacity = 0.0;
 
     // paint background
     QColor backgroundColor = palette.color(QPalette::Window);
-    if (sideToolbarDolphin) {
+
+    painter->setPen(Qt::NoPen);
+
+    if (StyleConfigData::toolBarOpacity() == 100) {
+        // opacity is at 100%
+        opacity = 1.0;
+        backgroundColor.setAlphaF(opacity);
+        painter->fillRect(rect, backgroundColor);
+    } else if (StyleConfigData::toolBarOpacity() == 0) {
+        // use the same titlebar color
+        _helper->renderTransparentArea(painter, rect);
+        opacity = 0.0;
+        backgroundColor.setAlphaF(opacity);
+        painter->fillRect(rect, backgroundColor);
+    } else if (StyleConfigData::toolBarOpacity() < 100 && StyleConfigData::toolBarOpacity() > 0) {
+        // lower the opacity
+        _helper->renderTransparentArea(painter, rect);
+        opacity = StyleConfigData::toolBarOpacity() / 100.0;
+        backgroundColor.setAlphaF(opacity);
+        painter->fillRect(rect, backgroundColor);
+    }
+
+    if (sideToolbarDolphin && _isDolphin) {
         backgroundColor.setAlphaF(StyleConfigData::dolphinSidebarOpacity() / 100.0 - 0.15);
         painter->fillRect(rect, backgroundColor);
 
@@ -5765,9 +5789,6 @@ bool Style::drawToolBarBackgroundControl(const QStyleOption *option, QPainter *p
         painter->drawLine(rect.topLeft() + QPoint(0, 3), rect.topRight() + QPoint(0, 3));
 
         return true;
-    } else {
-        backgroundColor.setAlphaF(opacity / 100.0);
-        painter->fillRect(rect, backgroundColor);
     }
 
     if (StyleConfigData::toolBarDrawSeparator() && !_isDolphin) {
@@ -8263,21 +8284,36 @@ QIcon Style::titleBarButtonIcon(StandardPixmap standardPixmap, const QStyleOptio
     };
 
     // map colors to icon states
-    const QList<IconData> iconTypes = {
 
-        // state off icons
-        {KColorUtils::mix(palette.color(QPalette::Window), base, 0.5), invertNormalState, QIcon::Normal, QIcon::Off},
-        {KColorUtils::mix(palette.color(QPalette::Window), selected, 0.5), invertNormalState, QIcon::Selected, QIcon::Off},
-        {KColorUtils::mix(palette.color(QPalette::Window), negative, 0.5), true, QIcon::Active, QIcon::Off},
-        {KColorUtils::mix(palette.color(QPalette::Window), base, 0.2), invertNormalState, QIcon::Disabled, QIcon::Off},
+    QList<IconData> iconTypes;
 
-        // state on icons
-        {KColorUtils::mix(palette.color(QPalette::Window), negative, 0.7), true, QIcon::Normal, QIcon::On},
-        {KColorUtils::mix(palette.color(QPalette::Window), negativeSelected, 0.7), true, QIcon::Selected, QIcon::On},
-        {KColorUtils::mix(palette.color(QPalette::Window), negative, 0.7), true, QIcon::Active, QIcon::On},
-        {KColorUtils::mix(palette.color(QPalette::Window), base, 0.2), invertNormalState, QIcon::Disabled, QIcon::On}
+    if (StyleConfigData::tabUseBrighterCloseIcon()) {
+        iconTypes = {// brighten the tab close icons
 
-    };
+                     // state off icons
+                     {KColorUtils::mix(palette.color(QPalette::Window), base, 1.0), invertNormalState, QIcon::Normal, QIcon::Off},
+                     {KColorUtils::mix(palette.color(QPalette::Window), selected, 1.0), invertNormalState, QIcon::Selected, QIcon::Off},
+                     {KColorUtils::mix(palette.color(QPalette::Window), negative, 1.0), true, QIcon::Active, QIcon::Off},
+                     {KColorUtils::mix(palette.color(QPalette::Window), base, 0.5), invertNormalState, QIcon::Disabled, QIcon::Off},
+
+                     // state on icons
+                     {KColorUtils::mix(palette.color(QPalette::Window), negative, 1.0), true, QIcon::Normal, QIcon::On},
+                     {KColorUtils::mix(palette.color(QPalette::Window), negativeSelected, 1.0), true, QIcon::Selected, QIcon::On},
+                     {KColorUtils::mix(palette.color(QPalette::Window), negative, 1.0), true, QIcon::Active, QIcon::On},
+                     {KColorUtils::mix(palette.color(QPalette::Window), base, 0.5), invertNormalState, QIcon::Disabled, QIcon::On}};
+    } else {
+        iconTypes = {// state off icons
+                     {KColorUtils::mix(palette.color(QPalette::Window), base, 0.5), invertNormalState, QIcon::Normal, QIcon::Off},
+                     {KColorUtils::mix(palette.color(QPalette::Window), selected, 0.5), invertNormalState, QIcon::Selected, QIcon::Off},
+                     {KColorUtils::mix(palette.color(QPalette::Window), negative, 0.5), true, QIcon::Active, QIcon::Off},
+                     {KColorUtils::mix(palette.color(QPalette::Window), base, 0.2), invertNormalState, QIcon::Disabled, QIcon::Off},
+
+                     // state on icons
+                     {KColorUtils::mix(palette.color(QPalette::Window), negative, 0.7), true, QIcon::Normal, QIcon::On},
+                     {KColorUtils::mix(palette.color(QPalette::Window), negativeSelected, 0.7), true, QIcon::Selected, QIcon::On},
+                     {KColorUtils::mix(palette.color(QPalette::Window), negative, 0.7), true, QIcon::Active, QIcon::On},
+                     {KColorUtils::mix(palette.color(QPalette::Window), base, 0.2), invertNormalState, QIcon::Disabled, QIcon::On}};
+    }
 
     // default icon sizes
     static const QList<int> iconSizes = {8, 16, 22, 32, 48};

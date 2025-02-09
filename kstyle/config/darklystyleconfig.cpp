@@ -76,6 +76,10 @@ StyleConfig::StyleConfig(QWidget *parent)
     connect(_menuBarOpacity, SIGNAL(valueChanged(int)), _menuBarOpacitySpinBox, SLOT(setValue(int)));
     connect(_menuBarOpacitySpinBox, SIGNAL(valueChanged(int)), _menuBarOpacity, SLOT(setValue(int)));
 
+    connect(_toolBarOpacity, &QAbstractSlider::valueChanged, this, &StyleConfig::updateChanged);
+    connect(_toolBarOpacity, SIGNAL(valueChanged(int)), _toolBarOpacitySpinBox, SLOT(setValue(int)));
+    connect(_toolBarOpacitySpinBox, SIGNAL(valueChanged(int)), _toolBarOpacity, SLOT(setValue(int)));
+
     connect(_kTextEditDrawFrame, &QAbstractButton::toggled, this, &StyleConfig::updateChanged);
     connect(_widgetDrawShadow, &QAbstractButton::toggled, this, &StyleConfig::updateChanged);
     connect(_scrollableMenu, &QAbstractButton::toggled, this, &StyleConfig::updateChanged);
@@ -87,6 +91,8 @@ StyleConfig::StyleConfig(QWidget *parent)
     connect(_transparentDolphinView, &QAbstractButton::toggled, this, &StyleConfig::updateChanged);
     connect(_cornerRadius, SIGNAL(valueChanged(int)), SLOT(updateChanged()));
     connect(_tabUseHighlightColor, &QAbstractButton::toggled, this, &StyleConfig::updateChanged);
+    connect(_tabUseBrighterCloseIcon, &QAbstractButton::toggled, this, &StyleConfig::updateChanged);
+    connect(_tabsHeight, &QAbstractSlider::valueChanged, this, &StyleConfig::updateChanged);
 }
 
 //__________________________________________________________________
@@ -112,6 +118,7 @@ void StyleConfig::save()
     StyleConfigData::setMenuOpacity(_menuOpacity->value());
     StyleConfigData::setDolphinSidebarOpacity(_sidebarOpacity->value());
     StyleConfigData::setMenuBarOpacity(_menuBarOpacity->value());
+    StyleConfigData::setToolBarOpacity(_toolBarOpacity->value());
     StyleConfigData::setButtonSize(_buttonSize->value());
     StyleConfigData::setKTextEditDrawFrame(_kTextEditDrawFrame->isChecked());
     StyleConfigData::setWidgetDrawShadow(_widgetDrawShadow->isChecked());
@@ -123,6 +130,8 @@ void StyleConfig::save()
     StyleConfigData::setTransparentDolphinView(_transparentDolphinView->isChecked());
     StyleConfigData::setCornerRadius(_cornerRadius->value());
     StyleConfigData::setTabUseHighlightColor(_tabUseHighlightColor->isChecked());
+    StyleConfigData::setTabUseBrighterCloseIcon(_tabUseBrighterCloseIcon->isChecked());
+    StyleConfigData::setTabsHeight(_tabsHeight->value());
 
     StyleConfigData::self()->save();
 
@@ -197,6 +206,9 @@ void StyleConfig::updateChanged()
     } else if (_menuBarOpacity->value() != StyleConfigData::menuBarOpacity()) {
         modified = true;
         _menuBarOpacitySpinBox->setValue(_menuBarOpacity->value());
+    } else if (_toolBarOpacity->value() != StyleConfigData::toolBarOpacity()) {
+        modified = true;
+        _toolBarOpacitySpinBox->setValue(_toolBarOpacity->value());
     } else if (_kTextEditDrawFrame->isChecked() != StyleConfigData::kTextEditDrawFrame())
         modified = true;
     else if (_tabBarDrawCenteredTabs->isChecked() != StyleConfigData::tabBarDrawCenteredTabs())
@@ -219,6 +231,11 @@ void StyleConfig::updateChanged()
         modified = true;
     else if (_tabUseHighlightColor->isChecked() != StyleConfigData::tabUseHighlightColor())
         modified = true;
+    else if (_tabUseBrighterCloseIcon->isChecked() != StyleConfigData::tabUseBrighterCloseIcon())
+        modified = true;
+    else if (_tabsHeight->value() != StyleConfigData::tabsHeight())
+        modified = true;
+
 
     emit changed(modified);
 }
@@ -249,6 +266,8 @@ void StyleConfig::load()
     _tabBarDrawCenteredTabs->setChecked(StyleConfigData::tabBarDrawCenteredTabs());
     _menuBarOpacity->setValue(StyleConfigData::menuBarOpacity());
     _menuBarOpacitySpinBox->setValue(StyleConfigData::menuBarOpacity());
+    _toolBarOpacity->setValue(StyleConfigData::toolBarOpacity());
+    _toolBarOpacitySpinBox->setValue(StyleConfigData::toolBarOpacity());
 
     _buttonSize->setValue(StyleConfigData::buttonSize());
     _kTextEditDrawFrame->setChecked(StyleConfigData::kTextEditDrawFrame());
@@ -261,7 +280,9 @@ void StyleConfig::load()
     _transparentDolphinView->setChecked(StyleConfigData::transparentDolphinView());
     _cornerRadius->setValue(StyleConfigData::cornerRadius());
     _tabUseHighlightColor->setChecked(StyleConfigData::tabUseHighlightColor());
+    _tabUseBrighterCloseIcon->setChecked(StyleConfigData::tabUseBrighterCloseIcon());
     _versionNumber->setText(DARKLY_VERSION_STRING);
+    _tabsHeight->setValue(StyleConfigData::tabsHeight());
 }
 
 }
