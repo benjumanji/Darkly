@@ -7029,7 +7029,14 @@ bool Style::drawTabBarTabShapeControl(const QStyleOption *option, QPainter *pain
     } else {
         _helper->renderTabBarTab(painter, backgroundRect, backgroundColor, backgroundCorners);
         if (mouseOver) {
-            backgroundRect.adjust(4, 4, -4, -4);
+            if (documentMode)
+                {
+                backgroundRect.adjust(4, 4, -4, -4);
+                }
+            else
+                {
+                backgroundRect.adjust(5, 6, -5, -6);
+                }
             painter->setBrush(_helper->alphaColor(_helper->hoverColor(palette), 0.2));
             painter->drawRoundedRect(backgroundRect, StyleConfigData::cornerRadius(), StyleConfigData::cornerRadius());
         }
