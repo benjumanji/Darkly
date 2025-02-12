@@ -1856,7 +1856,7 @@ bool Helper::shouldDrawToolsArea(const QWidget *widget) const
     static bool isAuto = false;
     static QString borderSize;
     if (!_cachedAutoValid) {
-        KConfigGroup kdecorationGroup(_config->group(QStringLiteral("org.kde.kdecoration2")));
+        KConfigGroup kdecorationGroup(_config->group(QStringLiteral("org.kde.kdecoration3")));
         isAuto = kdecorationGroup.readEntry("BorderSizeAuto", true);
         borderSize = kdecorationGroup.readEntry("BorderSize", "Normal");
         _cachedAutoValid = true;

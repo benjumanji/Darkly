@@ -129,13 +129,6 @@
          </property>
         </spacer>
        </item>
-       <item row="5" column="0" colspan="3">
-        <widget class="QCheckBox" name="drawSizeGrip">
-         <property name="text">
-          <string>Add handle to resize windows with no border</string>
-         </property>
-        </widget>
-       </item>
        <item row="6" column="0" colspan="3">
         <widget class="QCheckBox" name="drawTitleBarSeparator">
          <property name="text">
@@ -390,7 +383,6 @@
   <tabstop>outlineCloseButton</tabstop>
   <tabstop>drawBorderOnMaximizedWindows</tabstop>
   <tabstop>drawBackgroundGradient</tabstop>
-  <tabstop>drawSizeGrip</tabstop>
   <tabstop>drawTitleBarSeparator</tabstop>
   <tabstop>animationsEnabled</tabstop>
   <tabstop>animationsDuration</tabstop>

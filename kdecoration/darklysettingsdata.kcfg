@@ -102,11 +102,6 @@
     <entry name="DrawBackgroundGradient" type = "Bool">
         <default>true</default>
     </entry>
-
-    <!-- size grip -->
-    <entry name="DrawSizeGrip" type = "Bool">
-      <default>false</default>
-    </entry>
     
     <!-- highlight -->
     <entry name="DrawHighlight" type = "Bool">
