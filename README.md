@@ -1,3 +1,8 @@
+> [!IMPORTANT]
+> If you use a distro that doesn't have plasma 6.3 yet, please use [v0.5.16](https://github.com/Bali10050/Darkly/releases/tag/v0.5.16) or the [Darkly\(6.2\)](https://github.com/Bali10050/Darkly/tree/Darkly(6.2)) branch.
+> 
+> You can use this one if you want to, but it most likely won't work
+
 # About this fork
 
 This fork attempts to revive lightly with a different approach from boehs, with the assumption that Luwx won't ever resume his project.
