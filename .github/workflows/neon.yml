@@ -45,7 +45,7 @@ jobs:
         id: create_deb_package
         run: |
           cd build_kf6
-          cmake install .
+          make install .
           checkinstall -D --pkgname darkly --pkgversion ${{ inputs.version }} --nodoc --default
           deb_file=$(find . -name "*.deb*")
           test ! -z $deb_file && mv $deb_file /home/neon/darkly_${{ inputs.version }}_kdeneon_amd64.deb
