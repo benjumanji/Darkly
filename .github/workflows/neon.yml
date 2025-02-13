@@ -3,6 +3,10 @@
 # The Dockerfile is inside .github/assets/docker/kde-neon
 # Build Darkly from release tag and publish .deb package
 
+# Plasma 6.3 post installation notes.
+# Remove libkdecorations2private11
+# Remove libkdecorations2-6
+
 on:
   workflow_call:
     inputs:
